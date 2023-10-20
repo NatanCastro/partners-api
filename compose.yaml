@@ -1,12 +1,12 @@
 services:
   db:
-    image: bitnami/mongodb:5.0.17
+    container_name: mongodb
+    image: docker.io/bitnami/mongodb:7.0
     volumes:
       - mongodb_data:/bitnami/mongodb
     environment:
+      MONGODB_ROOT_USER: root
       MONGODB_ROOT_PASSWORD: root
-      MONGODB_REPLICA_SET_MODE: primary
-      MONGODB_REPLICA_SET_KEY: 123456
       MONGODB_DATABASE: mydatabase
     ports:
       - "27017:27017"
