@@ -27,6 +27,12 @@ public class PartnerController {
     return partnerUsecase.getPartner(id);
   }
 
+  @PostMapping(consumes = "application/json", produces = "application/json")
+  @ResponseStatus(value = org.springframework.http.HttpStatus.CREATED)
+  public Partner create(@RequestBody CreatePartnerDto data) {
+    return partnerUsecase.insertPartner(data);
+  }
+
   @PostMapping(value = "populate", consumes = "application/json")
   @ResponseStatus(value = org.springframework.http.HttpStatus.CREATED)
   public void populate(@RequestBody List<CreatePartnerDto> data) {
