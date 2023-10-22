@@ -7,6 +7,7 @@ import dev.natan.ze.challenge.domain.dto.UpdatePartnerDto;
 import dev.natan.ze.challenge.domain.entity.Partner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,32 +19,33 @@ public class PartnerController {
   private PartnerUsecase partnerUsecase;
 
   @GetMapping()
-  public List<Partner> findAll(@RequestParam("lat") Double lat, @RequestParam("lng") Double lng) {
+  public ResponseEntity<List<Partner>> findAll(@RequestParam("lat") Double lat, @RequestParam("lng") Double lng) {
     FindPartnerDto findPartnerDto = new FindPartnerDto(lat, lng);
-    return partnerUsecase.getPartners(findPartnerDto);
+    List<Partner> partners = partnerUsecase.getPartners(findPartnerDto);
+    return new ResponseEntity<>(partners, HttpStatus.OK);
   }
 
   @GetMapping(value = "/{id}")
-  @ResponseStatus(value = HttpStatus.OK)
-  public Partner findById(@PathVariable("id") Long id) {
-    return partnerUsecase.getPartner(id);
+  public ResponseEntity<Partner> findById(@PathVariable("id") Long id) {
+    Partner partner = partnerUsecase.getPartner(id);
+    return new ResponseEntity<>(partner, HttpStatus.OK);
   }
 
   @PatchMapping(value = "/{id}", consumes = "application/json")
-  @ResponseStatus(value = HttpStatus.OK)
-  public Partner update(@PathVariable("id") Long id, @RequestBody UpdatePartnerDto partner) {
-    return partnerUsecase.updatePartner(id, partner);
+  public ResponseEntity<Partner> update(@PathVariable("id") Long id, @RequestBody UpdatePartnerDto data) {
+    Partner partner = partnerUsecase.updatePartner(id, data);
+    return new ResponseEntity<>(partner, HttpStatus.OK);
   }
 
   @PostMapping(consumes = "application/json")
-  @ResponseStatus(value = HttpStatus.CREATED)
-  public Partner create(@RequestBody CreatePartnerDto data) {
-    return partnerUsecase.insertPartner(data);
+  public ResponseEntity<Partner> create(@RequestBody CreatePartnerDto data) {
+    Partner partner = partnerUsecase.insertPartner(data);
+    return new ResponseEntity<>(partner, HttpStatus.CREATED);
   }
 
   @PostMapping(value = "populate", consumes = "application/json")
-  @ResponseStatus(value = HttpStatus.CREATED)
-  public void populate(@RequestBody List<CreatePartnerDto> data) {
+  public ResponseEntity<Void> populate(@RequestBody List<CreatePartnerDto> data) {
     partnerUsecase.populate(data);
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 }
